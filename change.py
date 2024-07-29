@@ -206,7 +206,33 @@ def evaluator(client):
                     except Exception as e:
                         st.error(f"An error occurred: {e}")
             if st.session_state.feedback:
-                st.text_area("Needs to be improved:", st.session_state.feedback, height=500)
+                # Split the feedback into two parts: before and after the suggested alternatives
+                feedback_parts = st.session_state.feedback.split("**Suggested Alternatives:**")
+                feedback_text = feedback_parts[0].strip()
+                suggested_alternatives_text = feedback_parts[1].strip()
+
+                # Further split the suggested alternatives into subject and content
+                # Ensuring robust extraction by locating the "Subject:" and "Dear Jane," occurrences
+                subject_start = suggested_alternatives_text.find("Subject:")
+                subject_end = suggested_alternatives_text.find("\n\n", subject_start)
+                subject = suggested_alternatives_text[subject_start + len("Subject:"):subject_end].strip()
+
+                # Extracting the content part, ensuring that it starts right after the subject section
+                content_start = subject_end + 2
+                content = suggested_alternatives_text[content_start:].strip()
+
+                # Streamlit app layout
+                st.title("Client Feedback and Suggested Alternatives")
+
+                # Display feedback text area
+                st.subheader("Feedback")
+                st.text_area("Feedback Content", feedback_text, height=300)
+
+                # Display suggested alternatives
+                st.subheader("Suggested Alternatives")
+
+                st.text_area("Subject", subject, height=100)
+                st.text_area("Content", content, height=300)
             if st.button("Step 4: Send Email") or st.session_state.gmail_send:
                 st.session_state.gmail_send = True
                 gmailsender()
