@@ -277,7 +277,7 @@ def evaluator(client):
                 # Split the feedback into two parts: before and after the suggested alternatives
                 feedback_parts = st.session_state.feedback.split("**Suggested Alternatives:**")
                 if feedback_parts:
-                    feedback, criteria, marks, reasons = parse_feedback(feedback_parts)
+                    feedback, criteria, marks, reasons = parse_feedback(feedback_parts[0])
                     
                     st.subheader("Feedback")
                     st.write(feedback)
