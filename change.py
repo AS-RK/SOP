@@ -242,7 +242,7 @@ def evaluator(client):
 
                             Evaluation Task:
                             The response should have strictly four heading which is **client's issue**, **constructive feedback**, **evaluation based on sop**, **Suggested Alternatives:**. The order should be followed strictly
-                            and also this is the sample of how to write is "**criteria_from_sop:**evaluation_mark(reason_for_the_evaluation)"
+                            and also this is the sample of how to write is "[[criteria_from_sop],[evaluation_mark],[reason_for_the_evaluation]]"
                             Identify the Client's Issue: Clearly identify the specific problem or concern mentioned by the client in their email.
                             Evaluate Based on SOP Criteria:
                             For each criterion in the SOP, provide a mark (out of 10) with a reason for the score within 25 words.
@@ -275,20 +275,20 @@ def evaluator(client):
                 # Split the feedback into two parts: before and after the suggested alternatives
                 feedback_parts = st.session_state.feedback.split("**Suggested Alternatives:**")
                 feedback_text = feedback_parts[0].strip()
-                if feedback_text:
-                    feedback, criteria, marks, reasons = parse_feedback(feedback_text)
+                # if feedback_text:
+                #     feedback, criteria, marks, reasons = parse_feedback(feedback_text)
                     
-                    st.subheader("Feedback")
-                    st.write(feedback)
+                #     st.subheader("Feedback")
+                #     st.write(feedback)
                     
-                    st.subheader("Evaluation Based on SOP Criteria")
-                    evaluation_data = pd.DataFrame({
-                        "Criteria": criteria,
-                        "Evaluation Mark": marks,
-                        "Reason": reasons
-                    })
-                    evaluation_data.index = evaluation_data.index + 1  # Adjust index to start from 1
-                    st.table(evaluation_data)
+                #     st.subheader("Evaluation Based on SOP Criteria")
+                #     evaluation_data = pd.DataFrame({
+                #         "Criteria": criteria,
+                #         "Evaluation Mark": marks,
+                #         "Reason": reasons
+                #     })
+                #     evaluation_data.index = evaluation_data.index + 1  # Adjust index to start from 1
+                #     st.table(evaluation_data)
                 suggested_alternatives_text = feedback_parts[1].strip()
 
                 # Further split the suggested alternatives into subject and content
@@ -306,10 +306,10 @@ def evaluator(client):
 
                 # Display feedback text area
                 st.subheader("Feedback")
-
+                st.text_area("feedback", feedback_text, height=500)
                 # Display suggested alternatives
                 st.subheader("Suggested Alternatives")
-
+            
                 st.text_area("Subject", subject, height=100)
                 st.text_area("Content", content, height=300)
             if st.button("Step 4: Send Email") or st.session_state.gmail_send:
