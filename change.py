@@ -12,24 +12,43 @@ import pdfplumber
 from io import BytesIO
 from docx import Document
 import pandas as pd
+import json
 
 # Set up the necessary scopes and credentials file
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
-CREDENTIALS_FILE = 'credentials.json'
+GOOGLE_CREDENTIALS_JSON = st.secrets['GOOGLE_CREDENTIALS_JSON']
 
-# Function to get authenticated Gmail API service
 def get_gmail_service():
-    creds = None
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if 'creds' not in st.session_state:
+        st.session_state.creds = None
+
+    creds = st.session_state.creds
+
+    if creds:
+        creds = Credentials.from_authorized_user_info(json.loads(creds), SCOPES)
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-            creds = flow.run_local_server(port=8508)
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+            credentials_info = json.loads(GOOGLE_CREDENTIALS_JSON)
+            flow = InstalledAppFlow.from_client_config(credentials_info, SCOPES, redirect_uri='https://xbtyidczfte6j8nkwmvhm4.streamlit.app/')
+
+            auth_url, _ = flow.authorization_url(prompt='consent')
+
+            st.write("Please go to this URL to authorize the application:")
+            st.write(auth_url)
+
+            auth_code = st.experimental_get_query_params().get('code')
+            if auth_code:
+                auth_code = auth_code[0]
+                flow.fetch_token(code=auth_code)
+                creds = flow.credentials
+                st.session_state.creds = creds.to_json()
+
+        if creds:
+            st.session_state.creds = creds.to_json()
+
     service = build('gmail', 'v1', credentials=creds)
     return service
 
