@@ -11,6 +11,8 @@ from email.mime.text import MIMEText
 import pdfplumber
 from io import BytesIO
 from docx import Document
+import pandas as pd
+import re
 
 # Set up the necessary scopes and credentials file
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
@@ -163,6 +165,24 @@ def read_docx(file):
     # Join content with two newlines, but ensure no multiple consecutive newlines
     return "\n\n".join([line for line in content if line.strip()])
 
+def parse_feedback(text):
+    feedback_part = text.split("**Evaluation Based on SOP Criteria:**")[0].strip()
+    evaluation_part = text.split("**Evaluation Based on SOP Criteria:**")[1].strip()
+    
+    criteria = []
+    marks = []
+    reasons = []
+    
+    for line in evaluation_part.split('\n'):
+        if line.strip():
+            crit, rest = line.split(":", 1)
+            mark, reason = rest.split("(", 1)
+            criteria.append(crit.strip())
+            marks.append(mark.strip())
+            reasons.append(reason.rstrip(")").strip())
+    
+    return feedback_part, criteria, marks, reasons
+
 def evaluator(client):
     st.title("Step 1: Upload SOP File in any one of the file format")
     uploaded_file = st.file_uploader("Choose a text file", type="txt")
@@ -257,6 +277,20 @@ def evaluator(client):
             if st.session_state.feedback:
                 # Split the feedback into two parts: before and after the suggested alternatives
                 feedback_parts = st.session_state.feedback.split("**Suggested Alternatives:**")
+                if feedback_parts:
+                    feedback, criteria, marks, reasons = parse_feedback(feedback_parts)
+                    
+                    st.subheader("Feedback")
+                    st.write(feedback)
+                    
+                    st.subheader("Evaluation Based on SOP Criteria")
+                    evaluation_data = pd.DataFrame({
+                        "Criteria": criteria,
+                        "Evaluation Mark": marks,
+                        "Reason": reasons
+                    })
+                    evaluation_data.index = evaluation_data.index + 1  # Adjust index to start from 1
+                    st.table(evaluation_data)
                 feedback_text = feedback_parts[0].strip()
                 suggested_alternatives_text = feedback_parts[1].strip()
 
