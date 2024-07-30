@@ -12,6 +12,7 @@ import pdfplumber
 from io import BytesIO
 from docx import Document
 import pandas as pd
+import json
 
 # Set up the necessary scopes and credentials file
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
