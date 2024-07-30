@@ -33,7 +33,7 @@ def get_gmail_service():
         else:
             credentials_info = json.loads(GOOGLE_CREDENTIALS_JSON)
             flow = InstalledAppFlow.from_client_config(credentials_info, SCOPES)
-            creds = flow.run_local_server(port=8508)
+            creds = flow.run_console() 
 
         st.session_state.creds = creds.to_json()
 
