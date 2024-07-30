@@ -224,7 +224,7 @@ def evaluator(client):
                             Client Email:{st.session_state.gmail_content}
 
                             Evaluation Task:
-                            The response should have strictly four heading which is **client's issue**, **evaluation based on sop**, **constructive feedback**, **Suggested Alternatives:**
+                            The response should have strictly four heading which is **client's issue**, **constructive feedback**, **evaluation based on sop**, **Suggested Alternatives:**
                             Identify the Client's Issue: Clearly identify the specific problem or concern mentioned by the client in their email.
                             Evaluate Based on SOP Criteria:
                             For each criterion in the SOP, provide a mark (out of 10) with a reason for the score within 25 words.
