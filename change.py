@@ -252,7 +252,7 @@ def evaluator(client):
                                 Evaluation Based on SOP:
                                 
                                 For each criterion in the SOP, provide a mark (out of 10) with a reason for the score within 25 words.
-                                Present the criteria in a 2D list format: [[criteria], [mark], [reason]].
+                                Present the criteria in a 2D list format: [[criteria], [mark(out of 10)], [reason]].
                                 Suggested Alternatives:
                                 
                                 Suggest better alternative email content, fully structured with subject and body, 
