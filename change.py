@@ -9,6 +9,8 @@ from google.auth.transport.requests import Request
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 import pdfplumber
+from io import BytesIO
+from docx import Document
 
 # Set up the necessary scopes and credentials file
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
@@ -142,12 +144,37 @@ def read_pdf(file):
                     content.append(table_text)
     return "\n\n".join(content)
 
+def read_docx(file):
+    content = []
+    document = Document(file)
+    
+    # Read paragraphs
+    for paragraph in document.paragraphs:
+        if paragraph.text.strip():  # Only add non-empty paragraphs
+            content.append(paragraph.text)
+    
+    # Read tables
+    for table in document.tables:
+        for row in table.rows:
+            row_text = "\t".join([cell.text.strip() for cell in row.cells])
+            if row_text.strip():  # Only add non-empty rows
+                content.append(row_text)
+    
+    # Join content with two newlines, but ensure no multiple consecutive newlines
+    return "\n\n".join([line for line in content if line.strip()])
+
 def evaluator(client):
-    st.title("Step 1: Upload SOP File")
+    st.title("Step 1: Upload SOP File in any one of the file format")
     uploaded_file = st.file_uploader("Choose a text file", type="txt")
     uploaded_file_pdf = st.file_uploader("Choose a PDF file", type="pdf")
+    uploaded_file_docx = st.file_uploader("Choose a Word document", type="docx")
     if uploaded_file is not None:
         sop_content = uploaded_file.read().decode("utf-8")
+        st.session_state.sop_uploaded = True
+        modify_sop_content = st.text_area("SOP",sop_content, height=300)
+        st.session_state.sop_content = modify_sop_content
+    elif uploaded_file_docx is not None:
+        sop_content = read_pdf(uploaded_file_docx)
         st.session_state.sop_uploaded = True
         modify_sop_content = st.text_area("SOP",sop_content, height=300)
         st.session_state.sop_content = modify_sop_content
