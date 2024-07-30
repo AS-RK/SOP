@@ -182,6 +182,33 @@ def parse_feedback(text):
     
     return feedback_part, criteria, marks, reasons
 
+# Function to process the input text
+def process_feedback(text):
+    feedback, sop_evaluation = text.split("**Evaluation Based on SOP:**")
+    return feedback.strip(), sop_evaluation.strip()
+
+# Function to convert SOP evaluation to DataFrame
+def parse_sop_evaluation(sop_text):
+    lines = sop_text.split('\n')
+    criteria = []
+    marks = []
+    reasons = []
+
+    for line in lines:
+        if '|' in line and 'Criteria' not in line:
+            parts = line.split('|')
+            criteria.append(parts[1].strip())
+            marks.append(parts[2].strip())
+            reasons.append(parts[3].strip())
+
+    data = {
+        'Criteria': criteria,
+        'Mark (out of 10)': marks,
+        'Reason': reasons
+    }
+
+    return pd.DataFrame(data)
+
 def evaluator(client):
     st.title("Step 1: Upload SOP File in any one of the file format")
     uploaded_file = st.file_uploader("Choose a text file", type="txt")
@@ -293,6 +320,17 @@ def evaluator(client):
                 #     })
                 #     evaluation_data.index = evaluation_data.index + 1  # Adjust index to start from 1
                 #     st.table(evaluation_data)
+
+                if feedback_text:
+                    feedback, sop_evaluation = process_feedback(feedback_text)
+                    
+                    st.subheader('Feedback')
+                    st.write(feedback)
+                    
+                    st.subheader('Evaluation Based on SOP')
+                    df = parse_sop_evaluation(sop_evaluation)
+                    st.table(df)
+                
                 suggested_alternatives_text = feedback_parts[1].strip()
 
                 # Further split the suggested alternatives into subject and content
