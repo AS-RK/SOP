@@ -230,7 +230,7 @@ def evaluator(client):
         modify_sop_content = st.text_area("SOP",sop_content, height=300)
         st.session_state.sop_content = modify_sop_content
     else:
-        sop_content = st.text_area("SOP", height=300)
+        sop_content = st.text_area("Type your SOP content or Modify existing sop content", height=300)
     
     if st.button("Insert text"):
         st.session_state.sop_uploaded = True
