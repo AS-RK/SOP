@@ -32,27 +32,22 @@ def get_gmail_service():
             creds.refresh(Request())
         else:
             credentials_info = json.loads(GOOGLE_CREDENTIALS_JSON)
-            flow = InstalledAppFlow.from_client_config(
-                credentials_info, SCOPES, redirect_uri='https://xbtyidczfte6j8nkwmvhm4.streamlit.app/'
-            )
+            flow = InstalledAppFlow.from_client_config(credentials_info, SCOPES, redirect_uri='https://xbtyidczfte6j8nkwmvhm4.streamlit.app/')
 
             auth_url, _ = flow.authorization_url(prompt='consent')
 
             st.write("Please go to this URL to authorize the application:")
             st.write(auth_url)
 
-            auth_code = st.query_params.get('code')
+            auth_code = st.experimental_get_query_params().get('code')
             if auth_code:
                 auth_code = auth_code[0]
-                try:
-                    flow.fetch_token(code=auth_code)
-                    creds = flow.credentials
-                    st.session_state.creds = creds.to_json()
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
+                flow.fetch_token(code=auth_code)
+                creds = flow.credentials
+                st.session_state.creds = creds.to_json()
 
-    if creds:
-        st.session_state.creds = creds.to_json()
+        if creds:
+            st.session_state.creds = creds.to_json()
 
     service = build('gmail', 'v1', credentials=creds)
     return service
