@@ -165,8 +165,8 @@ def read_docx(file):
     return "\n\n".join([line for line in content if line.strip()])
 
 def parse_feedback(text):
-    feedback_part = text.split("**Evaluation Based on SOP Criteria:**")[0].strip()
-    evaluation_part = text.split("**Evaluation Based on SOP Criteria:**")[1].strip()
+    feedback_part = text.split("**Evaluation Based on SOP Criteria:**")[0]
+    evaluation_part = text.split("**Evaluation Based on SOP Criteria:**")[1]
     
     criteria = []
     marks = []
