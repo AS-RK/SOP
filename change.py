@@ -174,7 +174,7 @@ def evaluator(client):
         modify_sop_content = st.text_area("SOP",sop_content, height=300)
         st.session_state.sop_content = modify_sop_content
     elif uploaded_file_docx is not None:
-        sop_content = read_pdf(uploaded_file_docx)
+        sop_content = read_docx(uploaded_file_docx)
         st.session_state.sop_uploaded = True
         modify_sop_content = st.text_area("SOP",sop_content, height=300)
         st.session_state.sop_content = modify_sop_content
