@@ -344,11 +344,11 @@ def evaluator(client):
                 content = suggested_alternatives_text[content_start:].strip()
 
                 # Streamlit app layout
-                st.title("Client Feedback and Suggested Alternatives")
+                st.title("Suggested Alternatives")
 
                 # Display feedback text area
-                st.subheader("Feedback")
-                st.text_area("feedback", feedback_text, height=500)
+                # st.subheader("Feedback")
+                # st.text_area("feedback", feedback_text, height=500)
                 # Display suggested alternatives
                 st.subheader("Suggested Alternatives")
             
