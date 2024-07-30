@@ -223,8 +223,6 @@ def evaluator(client):
                 st.session_state.gmail_fetched = True
 
         if st.session_state.get('gmail_fetched', False):
-            st.text_area("Client Gmail content:", st.session_state.gmail_content,height=400, disabled=True)
-
             st.title("Step 3: Type your content to evaluate")
             user_input = st.text_area("Your content:", height=400)
             if st.button("Evaluate"):
@@ -276,8 +274,9 @@ def evaluator(client):
             if st.session_state.feedback:
                 # Split the feedback into two parts: before and after the suggested alternatives
                 feedback_parts = st.session_state.feedback.split("**Suggested Alternatives:**")
-                if feedback_parts:
-                    feedback, criteria, marks, reasons = parse_feedback(feedback_parts[0])
+                feedback_text = feedback_parts[0].strip()
+                if feedback_text:
+                    feedback, criteria, marks, reasons = parse_feedback(feedback_text)
                     
                     st.subheader("Feedback")
                     st.write(feedback)
@@ -290,7 +289,6 @@ def evaluator(client):
                     })
                     evaluation_data.index = evaluation_data.index + 1  # Adjust index to start from 1
                     st.table(evaluation_data)
-                feedback_text = feedback_parts[0].strip()
                 suggested_alternatives_text = feedback_parts[1].strip()
 
                 # Further split the suggested alternatives into subject and content
@@ -308,7 +306,6 @@ def evaluator(client):
 
                 # Display feedback text area
                 st.subheader("Feedback")
-                st.text_area("Feedback Content", feedback_text, height=300)
 
                 # Display suggested alternatives
                 st.subheader("Suggested Alternatives")
