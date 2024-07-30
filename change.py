@@ -230,29 +230,33 @@ def evaluator(client):
                     st.error("Insufficient Information")
                 else:
                     prompt = f"""
-                            As a Quality Analyst, your task is to meticulously evaluate a user's response to a client email 
-                            based on our Standard Operating Procedure (SOP) for email communication. The client email outlines 
-                            an issue or concern they are experiencing with our product. Your task involves identifying the 
-                            specific problem mentioned by the client and ensuring the response adheres to our SOP. 
-                            Follow these steps:
-
-                            SOP Content:{st.session_state.sop_content}
-
-                            Client Email:{st.session_state.gmail_content}
-
-                            Evaluation Task:
-                            The response should have strictly four heading which is **client's issue**, **constructive feedback**, **evaluation based on sop**, **Suggested Alternatives:**. The order should be followed strictly
-                            and under the **evaluation based on sop** the cretieria strictly in the 2d list format like [[criteria],[mark],[reason]]
-                            Identify the Client's Issue: Clearly identify the specific problem or concern mentioned by the client in their email.
-                            Evaluate Based on SOP Criteria:
-                            For each criterion in the SOP, provide a mark (out of 10) with a reason for the score within 25 words.
-                            Criteria include based on the SOP guidelines.
-                            Provide Constructive Feedback:
-                            Offer actionable feedback aimed at improving future responses.
-                            Ensure feedback is specific and provides clear examples where applicable.
-                            Suggest Alternatives:
-                            Suggest better alternatives email content to the current email content which should fully structured mail and should have subjecta and content.
-                            Ensure suggestions align with the SOP and address the client's concern effectively.
+                                As a Quality Analyst, your task is to meticulously evaluate a user's response to a client email based on 
+                                our Standard Operating Procedure (SOP) for email communication. The client email outlines an issue or concern 
+                                they are experiencing with our product. Your evaluation involves identifying the specific problem mentioned by 
+                                the client and ensuring the response adheres to our SOP. Follow these steps:
+                                
+                                SOP Content
+                                {st.session_state.sop_content}
+                                
+                                Client Email
+                                {st.session_state.gmail_content}
+                                
+                                Evaluation Task
+                                Client's Issue:
+                                
+                                Clearly identify the specific problem or concern mentioned by the client in their email.
+                                Constructive Feedback:
+                                
+                                Provide actionable feedback aimed at improving future responses.
+                                Ensure feedback is specific and provides clear examples where applicable.
+                                Evaluation Based on SOP:
+                                
+                                For each criterion in the SOP, provide a mark (out of 10) with a reason for the score within 25 words.
+                                Present the criteria in a 2D list format: [[criteria], [mark], [reason]].
+                                Suggested Alternatives:
+                                
+                                Suggest better alternative email content, fully structured with subject and body, 
+                                that aligns with the SOP and addresses the client's concern effectively.
                         """
 
                     try:
