@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
+import pdfplumber
 
 # Set up the necessary scopes and credentials file
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send']
@@ -127,12 +128,31 @@ def gmailsender():
         else:
             st.write('Please fill out all fields.')
 
+def read_pdf(file):
+    content = []
+    with pdfplumber.open(file) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text()
+            tables = page.extract_tables()
+            if text:
+                content.append(text)
+            if tables:
+                for table in tables:
+                    table_text = "\n".join(["\t".join(map(str, row)) for row in table])
+                    content.append(table_text)
+    return "\n\n".join(content)
+
 def evaluator(client):
     st.title("Step 1: Upload SOP File")
     uploaded_file = st.file_uploader("Choose a text file", type="txt")
-
+    uploaded_file_pdf = st.file_uploader("Choose a PDF file", type="pdf")
     if uploaded_file is not None:
         sop_content = uploaded_file.read().decode("utf-8")
+        st.session_state.sop_uploaded = True
+        modify_sop_content = st.text_area("SOP",sop_content, height=300)
+        st.session_state.sop_content = modify_sop_content
+    elif uploaded_file_pdf is not None:
+        sop_content = read_pdf(uploaded_file_pdf)
         st.session_state.sop_uploaded = True
         modify_sop_content = st.text_area("SOP",sop_content, height=300)
         st.session_state.sop_content = modify_sop_content
