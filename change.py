@@ -242,7 +242,7 @@ def evaluator(client):
 
                             Evaluation Task:
                             The response should have strictly four heading which is **client's issue**, **constructive feedback**, **evaluation based on sop**, **Suggested Alternatives:**. The order should be followed strictly
-                            and under the **evaluation based on sop** the cretieria strictly in the 2d list format: "[[criteria_from_sop],[evaluation_mark],[reason_for_the_evaluation]]"
+                            and under the **evaluation based on sop** the cretieria strictly in the 2d list format: "[criteria_from_sop],[evaluation_mark],[reason_for_the_evaluation]"
                             Identify the Client's Issue: Clearly identify the specific problem or concern mentioned by the client in their email.
                             Evaluate Based on SOP Criteria:
                             For each criterion in the SOP, provide a mark (out of 10) with a reason for the score within 25 words.
